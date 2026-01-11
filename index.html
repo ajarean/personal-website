@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <title>lol</title>
+    <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css">
+</html>
+
+<div id="player-container" style="width: 100%; height: 100vh;"></div>
+
+<script>
+new spine.SpinePlayer("player-container", {
+	skeleton: "assets/CH0284_home.skel",
+	atlas: "assets/CH0284_home.atlas",
+    scale: 1,
+    premultipliedAlpha: false,
+    alpha: true,
+    backgroundColor: "#00000000",
+    showControls: false,
+    interactive: false,
+
+    viewport: {
+        x: -1200,
+        y: 0,
+        width: 2560,
+        height: 1661,
+        clip: true
+    },
+
+    success: function(player) {
+        player.animationState.setAnimation(0, "Idle_01", true)
+    }
+});
+</script>
