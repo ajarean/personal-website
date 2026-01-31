@@ -8,6 +8,13 @@
 <div id="player-container" style="width: 100%; height: 100vh;"></div>
 
 <script>
+
+let spinePlayer = null;
+let eyeBone = null;
+let currentX = 0, currentY = 0;
+let targetX = 0, targetY = 0;
+const SMOOTH_FACTOR = 0.1;
+
 new spine.SpinePlayer("player-container", {
 	skeleton: "assets/CH0284_home.skel",
 	atlas: "assets/CH0284_home.atlas",
@@ -27,7 +34,34 @@ new spine.SpinePlayer("player-container", {
     },
 
     success: function(player) {
-        player.animationState.setAnimation(0, "Idle_01", true)
+        // On startup, it should play Start_Idle_01, but this would be really weird to get working on a website since it moves the camera around (I think)
+        // Default state is Idle_01, but we want eye tracking 
+        // Eye movements DO work on Idle_01, but I think the Look animations have more head movement?
+        player.animationState.setAnimation(0, "Look_01_A", true) 
+        // When the character looks, they play Look_01_A (Look_01_M) and end with LookEnd_01_A (LookEnd_01_M)
+        // No idea what the difference between A and M is (for now)
+
+        eyeBone = player.skeleton.findBone("Touch_Eye");
+        requestAnimationFrame(tickEyes);
     }
 });
+
+document.addEventListener('mousemove', (e) => {
+    // yuuka eye center (forehead?): 0.50, 0.40 
+    const centerX = window.innerWidth * 0.50;
+    const centerY = window.innerHeight * 0.40;
+    const sensitivity = 2.0; 
+    targetX = (e.clientX - centerX) / sensitivity;
+    targetY = (centerY - e.clientY) / sensitivity;
+});
+
+function tickEyes() {
+    requestAnimationFrame(tickEyes);
+    if (!eyeBone) return;
+    currentX += (targetX - currentX) * SMOOTH_FACTOR;
+    currentY += (targetY - currentY) * SMOOTH_FACTOR;
+    eyeBone.x = currentX;
+    eyeBone.y = currentY;
+}
+
 </script>
