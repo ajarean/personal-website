@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
     <title>lol</title>
-    <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css">
+    <!-- <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css"> -->
+
+    <!-- I don't think there's a spine 3.8??? would've been ideal for the model I wanted to use but oh well -->
+    <script src="spine/spine-player.js"></script>
+    <link rel="stylesheet" href="spine/spine-player.css">
 </html>
 
 <div id="player-container" style="width: 100%; height: 100vh;"></div>
@@ -16,7 +20,7 @@ let targetX = 0, targetY = 0;
 const SMOOTH_FACTOR = 0.1;
 
 new spine.SpinePlayer("player-container", {
-	skeleton: "assets/CH0284_home.skel",
+	skeleton: "assets/CH0284_home.skel", // you might need to get these files yourself
 	atlas: "assets/CH0284_home.atlas",
     scale: 1,
     premultipliedAlpha: false,
