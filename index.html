@@ -16,11 +16,18 @@
 <body>
 
 <div id="player-container"></div>
-<select id="anim-select" style="position:fixed;top:10px;right:10px;z-index:100;font-size:14px;padding:4px;"></select>
+<!-- ANIMATION SELECT DROPDOWN -->
+<!-- <select id="anim-select" style="position:fixed;top:10px;right:10px;z-index:100;font-size:14px;padding:4px;"></select> -->
 
-<button class="ba-button ba-button--linkedin" id="btn-about" aria-label="About me">
+<dialog id="skip-dialog" style="padding:24px;text-align:center;border:1px solid #ccc;border-radius:6px;top:50%;left:50%;transform:translate(-50%,-50%);margin:0;">
+    <p style="margin-bottom:16px;">Skip the intro?<br>(I know this dialog box doesnt look pretty but I'll change it later)</p>
+    <button id="skip-yes" style="margin-right:8px;">Yes</button>
+    <button id="skip-no">No</button>
+</dialog>
+
+<button class="ba-button ba-button--linkedin ui-hidden" id="btn-about" aria-label="About me">
 </button>
-<a href="https://github.com/ajarean" class="ba-button ba-button--github" aria-label="GitHub projects">
+<a href="https://github.com/ajarean" class="ba-button ba-button--github ui-hidden" aria-label="GitHub projects">
     <img src="assets/projects_folder.svg" width="300">
 </a>
 
@@ -116,28 +123,54 @@ new spine.SpinePlayer("player-container", {
         eyeBone = player.skeleton.findBone("Touch_Eye");
         requestAnimationFrame(tickEyes);
 
+        const skipDialog = document.getElementById('skip-dialog');
+        let introPlaying = true;
+
+        function finishIntro() {
+            if (!introPlaying) return;
+            introPlaying = false;
+            player.animationState.setAnimation(0, 'Idle_01', true);
+            eyeTrackingEnabled = true;
+            document.querySelectorAll('.ui-hidden').forEach(el => el.classList.remove('ui-hidden'));
+            if (showWelcome) openModal('welcome');
+        }
+
+        document.addEventListener('click', function onIntroClick() {
+            if (!introPlaying) { document.removeEventListener('click', onIntroClick); return; }
+            if (!skipDialog.open) skipDialog.showModal();
+        });
+
+        document.getElementById('skip-yes').addEventListener('click', (e) => {
+            e.stopPropagation();
+            skipDialog.close();
+            finishIntro();
+        });
+        document.getElementById('skip-no').addEventListener('click', (e) => {
+            e.stopPropagation();
+            skipDialog.close();
+        });
+
         player.animationState.addListener({
             complete: function(entry) {
-                if (entry.animation.name === 'Start_Idle_01') {
-                    player.animationState.setAnimation(0, 'Idle_01', true);
-                    eyeTrackingEnabled = true;
-                }
+                if (entry.animation.name === 'Start_Idle_01') finishIntro();
             }
         });
 
         player.animationState.setAnimation(0, 'Start_Idle_01', false);
 
-        const select = document.getElementById('anim-select');
-        player.skeleton.data.animations.forEach(anim => {
-            const opt = document.createElement('option');
-            opt.value = opt.textContent = anim.name;
-            if (anim.name === 'Idle_01') opt.selected = true;
-            select.appendChild(opt);
-        });
-        select.addEventListener('change', () => {
-            eyeTrackingEnabled = true;
-            player.animationState.setAnimation(0, select.value, true);
-        });
+        
+        // ANIMATION SELECT
+        // const select = document.getElementById('anim-select');
+        // player.skeleton.data.animations.forEach(anim => {
+        //     const opt = document.createElement('option');
+        //     opt.value = opt.textContent = anim.name;
+        //     if (anim.name === 'Idle_01') opt.selected = true;
+        //     select.appendChild(opt);
+        // });
+        // select.addEventListener('change', () => {
+        //     eyeTrackingEnabled = true;
+        //     player.animationState.setAnimation(0, select.value, true);
+        // });
     }
 });
 
@@ -167,10 +200,8 @@ document.getElementById('btn-about').addEventListener('click', () => openModal('
 document.getElementById('modal-close').addEventListener('click', () => modalOverlay.classList.remove('open'));
 modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('open'); });
 
-if (!localStorage.getItem('visited')) {
-    localStorage.setItem('visited', '1');
-    openModal('welcome');
-}
+const showWelcome = !localStorage.getItem('visited');
+if (showWelcome) localStorage.setItem('visited', '1');
 
 function tickEyes() {
     requestAnimationFrame(tickEyes);
