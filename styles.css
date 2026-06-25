@@ -64,7 +64,7 @@ button.ba-button {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(10, 20, 40, 0.55);
+    background: rgba(12, 24, 40, 0.6);
     z-index: 50;
     align-items: center;
     justify-content: center;
@@ -76,27 +76,29 @@ button.ba-button {
 
 .ba-modal {
     background: #63a2be;
-    border-radius: 14px;
+    border: 1.5px solid #356780;
+    border-radius: 5px;
     width: min(860px, 92vw);
     max-height: 82vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
 }
 
 .ba-modal__header {
-    background: #92bed4;
-    padding: 14px 20px;
+    background: #7cb2cc;
+    padding: 10px 16px;
     display: flex;
     align-items: center;
     gap: 12px;
     flex-shrink: 0;
+    border-bottom: 2px solid #4d8099;
 }
 
 .ba-modal__icon {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     object-fit: contain;
 }
 
@@ -105,33 +107,37 @@ button.ba-button {
     font-size: 22px;
     font-weight: 900;
     color: #1a3050;
+    text-shadow: 1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff;
     flex: 1;
     margin: 0;
 }
 
 .ba-modal__close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    line-height: 1;
-    color: #1a3050;
+    background: #528ba6;
+    border: 1px solid #3d6f87;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 2px 12px;
+    border-radius: 3px;
+    transition: background 0.1s; 
 }
 
 .ba-modal__close:hover {
-    background: rgba(0, 0, 0, 0.12);
+    background: #41758f;
 }
 
 .ba-modal__body {
-    margin: 12px;
-    background: #fff;
-    border: 3px solid #3aaabb;
-    border-radius: 10px;
+    margin: 6px;
+    background: #ffffff;
+    border: 1.5px solid #3aaabb;
+    border-radius: 4px;
     flex: 1;
     overflow-y: auto;
     min-height: 300px;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
 }
 
 .ba-button--linkedin {
