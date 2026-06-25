@@ -34,7 +34,12 @@ body::before {
     display: block;
     line-height: 0;
     text-decoration: none;
-    transition: filter 0.15s ease, transform 0.1s ease;
+    transition: filter 0.15s ease, transform 0.1s ease, opacity 1.2s ease;
+}
+
+.ba-button.ui-hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .ba-button:hover {
@@ -139,6 +144,36 @@ button.ba-button {
     background: #41758f;
 }
 
+.ba-modal__footer {
+    display: flex;
+    gap: 20px;
+    padding: 8px 16px 10px;
+    flex-shrink: 0;
+}
+
+.ba-modal__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: #1a3050;
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.15s;
+}
+
+.ba-modal__link:hover {
+    opacity: 1;
+}
+
+.ba-modal__link-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
 .ba-modal__body {
     --lh: 26px;
     --pt: 10px;
@@ -163,11 +198,181 @@ button.ba-button {
     box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
     padding: var(--pt) 16px 10px;
     font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
     font-size: 15px;
     line-height: var(--lh);
 }
 
-.ba-button--linkedin {
+/* Base Dialog Overrides */
+.ba-notice {
+    border: 1.5px solid #a9c2d0;
+    border-radius: 8px;
+    width: min(460px, 90vw);
+    padding: 0;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 10px 30px rgba(15, 30, 50, 0.3);
+    overflow: hidden;
+    
+    background: linear-gradient(to bottom, #ffffff 0%, #edf4f9 100%);
+    position: relative;
+}
+
+.ba-notice::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('assets/triangle.svg');
+    background-size: cover;
+    background-position: bottom center;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.6) 25%, transparent 55%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.6) 25%, transparent 55%);
+}
+
+/* Header Elements */
+.ba-notice__header {
+    position: relative;
+    z-index: 1; /* Pushes content over the pseudo background */
+    padding: 20px 20px 4px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.ba-notice__title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ba-notice__title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: #203858;
+    margin: 0;
+}
+
+/* The yellow bar directly beneath the word "Notice" */
+.ba-notice__title-accent {
+    width: 32px;
+    height: 3px;
+    background: #f1d24b;
+    margin-top: 2px;
+    border-radius: 1px;
+}
+
+.ba-notice__close {
+    position: absolute;
+    right: 18px;
+    top: 16px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #43617a;
+    cursor: pointer;
+    outline: none;
+}
+
+.ba-notice__close:focus-visible {
+    opacity: 0.7;
+}
+
+/* Content Body */
+.ba-notice__body {
+    position: relative;
+    z-index: 1;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.ba-notice__text {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 18px;
+    color: #333d47;
+    font-weight: 500;
+}
+
+/* Footer & Skewed Buttons */
+.ba-notice__actions {
+    position: relative;
+    z-index: 1;
+    padding: 0 24px 24px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.ba-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Parallelogram Button Base */
+.ba-notice-btn {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 10px 36px;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    outline: none;
+    
+    /* Skews the button container to make it an in-game style rhombus */
+    transform: skewX(-12deg); 
+    border-radius: 4px;
+    transition: filter 0.15s, transform 0.1s;
+}
+
+/* Un-skew the internal button text so the text stays perfectly upright */
+.ba-notice-btn * {
+    transform: skewX(12deg);
+    display: inline-block;
+}
+
+/* Cancel / Left Button Style */
+.ba-notice-btn--cancel {
+    background: linear-gradient(to bottom, #e3edf2, #cfdee5);
+    color: #2b4561;
+}
+
+/* Confirm / Right Button Style */
+.ba-notice-btn--confirm {
+    background: linear-gradient(to bottom, #6fc8f2, #47a6e2);
+    color: #2b4561;
+    border-color: #3b8cb8;
+}
+
+.ba-notice-btn:hover {
+    filter: brightness(1.05);
+}
+
+.ba-notice-btn:active {
+    transform: skewX(-12deg) scale(0.97);
+}
+
+/* Small dark hotkey badge beneath the buttons */
+.ba-btn-badge {
+    margin-top: 4px;
+    background: #253344;
+    color: #ffffff;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 1px 8px;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.ba-button--about {
     top: 20px;
     left: 20px;
 }
