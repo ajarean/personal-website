@@ -9,3 +9,4 @@ public/assets/Game_Icon.webp
 public/assets/*.png
 !public/assets/CH*.png
 !public/assets/cafe.png
+!public/assets/students.png
