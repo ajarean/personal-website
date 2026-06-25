@@ -1,1 +1,12 @@
-# assets/
+node_modules/
+dist/
+
+# game rips (not redistributable)
+assets/*.png
+assets/*.skel
+assets/*.atlas
+assets/*.webp
+
+# allow original
+!assets/*.svg
+# !assets/bg.jpg

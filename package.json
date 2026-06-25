@@ -1,0 +1,26 @@
+{
+  "name": "personal-website",
+  "version": "1.0.0",
+  "description": "personal website",
+  "homepage": "https://github.com/ajarean/personal-website#readme",
+  "bugs": {
+    "url": "https://github.com/ajarean/personal-website/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajarean/personal-website.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "vite": "^8.1.0"
+  }
+}

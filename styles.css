@@ -1,0 +1,91 @@
+:root {
+    --ba-blue: #4A90D9;
+    --ba-blue-glow: rgba(74, 144, 217, 0.6);
+    --ba-white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url('assets/bg.jpg') center / cover no-repeat;
+    filter: blur(12px);
+    transform: scale(1.05); /* prevents blur edge bleed */
+    z-index: -1;
+}
+
+#player-container {
+    width: 100%;
+    height: 100vh;
+}
+
+.ba-button {
+    position: absolute;
+    z-index: 10;
+    display: block;
+    line-height: 0;
+    text-decoration: none;
+    outline: 1.5px solid transparent;
+    outline-offset: 2px;
+    transition: filter 0.15s ease, transform 0.1s ease, outline-color 0.15s ease;
+}
+
+.ba-button::before,
+.ba-button::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--ba-white);
+    border-style: solid;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.ba-button::before {
+    top: -3px;
+    left: -3px;
+    border-width: 2px 0 0 2px;
+}
+
+.ba-button::after {
+    bottom: -3px;
+    right: -3px;
+    border-width: 0 2px 2px 0;
+}
+
+.ba-button:hover {
+    filter: drop-shadow(0 0 10px var(--ba-blue-glow)) brightness(1.12);
+    outline-color: var(--ba-blue);
+}
+
+.ba-button:hover::before,
+.ba-button:hover::after {
+    opacity: 1;
+}
+
+.ba-button:active {
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 5px var(--ba-blue-glow)) brightness(0.9);
+}
+
+.ba-button--linkedin {
+    top: 20px;
+    left: 20px;
+}
+
+.ba-button--github {
+    bottom: 20px;
+    right: 20px;
+}
