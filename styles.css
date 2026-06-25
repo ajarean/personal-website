@@ -1,7 +1,6 @@
 :root {
     --ba-blue: #4A90D9;
     --ba-blue-glow: rgba(74, 144, 217, 0.6);
-    --ba-white: #ffffff;
 }
 
 * {
@@ -35,44 +34,11 @@ body::before {
     display: block;
     line-height: 0;
     text-decoration: none;
-    outline: 1.5px solid transparent;
-    outline-offset: 2px;
-    transition: filter 0.15s ease, transform 0.1s ease, outline-color 0.15s ease;
-}
-
-.ba-button::before,
-.ba-button::after {
-    content: '';
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-color: var(--ba-white);
-    border-style: solid;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.ba-button::before {
-    top: -3px;
-    left: -3px;
-    border-width: 2px 0 0 2px;
-}
-
-.ba-button::after {
-    bottom: -3px;
-    right: -3px;
-    border-width: 0 2px 2px 0;
+    transition: filter 0.15s ease, transform 0.1s ease;
 }
 
 .ba-button:hover {
     filter: drop-shadow(0 0 10px var(--ba-blue-glow)) brightness(1.12);
-    outline-color: var(--ba-blue);
-}
-
-.ba-button:hover::before,
-.ba-button:hover::after {
-    opacity: 1;
 }
 
 .ba-button:active {
