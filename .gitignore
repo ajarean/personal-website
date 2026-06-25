@@ -2,11 +2,6 @@ node_modules/
 dist/
 
 # game rips (not redistributable)
+assets/Game_Icon.webp
 assets/*.png
-assets/*.skel
-assets/*.atlas
-assets/*.webp
-
-# allow original
-!assets/*.svg
-# !assets/bg.jpg
+!assets/CH*.png
