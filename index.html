@@ -17,24 +17,27 @@
 
 <div id="player-container"></div>
 
-<a href="https://www.linkedin.com/in/andy-jarean-155864234" class="ba-button ba-button--linkedin" aria-label="LinkedIn profile">
-</a>
+<button class="ba-button ba-button--linkedin" id="btn-about" aria-label="About me">
+</button>
 <a href="https://github.com/ajarean" class="ba-button ba-button--github" aria-label="GitHub projects">
     <img src="assets/projects_folder.svg" width="300">
 </a>
 
-<button class="ba-button ba-button--test" id="btn-test" aria-label="Open student list">
-    <img src="assets/students.png" width="60">
-</button>
 
 <div class="ba-modal-overlay" id="modal-student">
     <div class="ba-modal">
         <div class="ba-modal__header">
-            <img src="assets/students.png" class="ba-modal__icon" alt="">
-            <h2 class="ba-modal__title">Student List</h2>
+            <img src="assets/cafe.png" class="ba-modal__icon" alt="">
+            <h2 class="ba-modal__title">About Me</h2>
             <button class="ba-modal__close" id="modal-close" aria-label="Close">X</button>
         </div>
-        <div class="ba-modal__body"></div>
+        <div class="ba-modal__body">
+            <p>Hi, I'm Andy, a software developer.</p>
+            <p>I just graduated with an MS in Computer Science, and I'm currently job hunting.</p>
+            <p>This site is a personal playground, since I wanted to experiment with Spine animations.</p>
+            <p>&nbsp;</p>
+            <p>Current interests: Computer Graphics</p>
+        </div>
     </div>
 </div>
 
@@ -43,8 +46,8 @@
 
 // Playerbar config 
 const PLAYER = {
-    name:       'Sensei',
-    level:      1,
+    name:       'Andy J.',
+    level:      22,
     xpCurrent:  0,
     xpMax:      100,
 };
@@ -121,7 +124,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 const modalOverlay = document.getElementById('modal-student');
-document.getElementById('btn-test').addEventListener('click', () => modalOverlay.classList.add('open'));
+document.getElementById('btn-about').addEventListener('click', () => modalOverlay.classList.add('open'));
 document.getElementById('modal-close').addEventListener('click', () => modalOverlay.classList.remove('open'));
 modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('open'); });
 
