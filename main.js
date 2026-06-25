@@ -56,6 +56,11 @@ document.getElementById('btn-about').addEventListener('click', () => openModal('
 document.getElementById('modal-close').addEventListener('click', () => modalOverlay.classList.remove('open'));
 modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('open'); });
 
+const projectsOverlay = document.getElementById('modal-projects');
+document.getElementById('btn-projects').addEventListener('click', () => projectsOverlay.classList.add('open'));
+document.getElementById('modal-projects-close').addEventListener('click', () => projectsOverlay.classList.remove('open'));
+projectsOverlay.addEventListener('click', (e) => { if (e.target === projectsOverlay) projectsOverlay.classList.remove('open'); });
+
 new spine.SpinePlayer("player-container", {
     skeleton: "assets/CH0284_home.skel",
     atlas: "assets/CH0284_home.atlas",
