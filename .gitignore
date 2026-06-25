@@ -5,3 +5,6 @@ dist/
 assets/Game_Icon.webp
 assets/*.png
 !assets/CH*.png
+public/assets/Game_Icon.webp
+public/assets/*.png
+!public/assets/CH*.png
