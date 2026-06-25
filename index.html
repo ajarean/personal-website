@@ -3,6 +3,9 @@
 <head>
     <title>Andy Jarean</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700;900&display=swap" rel="stylesheet">
     <!-- I don't think there's a spine 3.8??? would've been ideal for the model I wanted to use but oh well -->
     <!-- <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css"> -->
@@ -15,14 +18,56 @@
 <div id="player-container"></div>
 
 <a href="https://www.linkedin.com/in/andy-jarean-155864234" class="ba-button ba-button--linkedin" aria-label="LinkedIn profile">
-    <img src="assets/playerbar.svg" width="400">
 </a>
 <a href="https://github.com/ajarean" class="ba-button ba-button--github" aria-label="GitHub projects">
     <img src="assets/projects_folder.svg" width="300">
 </a>
 
+<button class="ba-button ba-button--test" id="btn-test" aria-label="Open student list">
+    <img src="assets/students.png" width="60">
+</button>
+
+<div class="ba-modal-overlay" id="modal-student">
+    <div class="ba-modal">
+        <div class="ba-modal__header">
+            <img src="assets/students.png" class="ba-modal__icon" alt="">
+            <h2 class="ba-modal__title">Student List</h2>
+            <button class="ba-modal__close" id="modal-close" aria-label="Close">X</button>
+        </div>
+        <div class="ba-modal__body"></div>
+    </div>
+</div>
+
 <script>
 
+
+// Playerbar config 
+const PLAYER = {
+    name:       'Sensei',
+    level:      1,
+    xpCurrent:  0,
+    xpMax:      100,
+};
+
+async function initPlayerbar() {
+    const res = await fetch('assets/playerbar.svg');
+    const svgText = await res.text();
+    const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+
+    doc.getElementById('playername').querySelector('tspan').textContent = PLAYER.name;
+    doc.getElementById('lv-number').querySelector('tspan').textContent  = PLAYER.level;
+    doc.getElementById('xp-fraction').querySelector('tspan').textContent =
+        `${PLAYER.xpCurrent}/${PLAYER.xpMax}`;
+
+    const svg = doc.documentElement;
+    svg.setAttribute('width', '400');
+    svg.removeAttribute('height');
+
+    document.querySelector('.ba-button--linkedin').appendChild(
+        document.importNode(svg, true)
+    );
+}
+initPlayerbar();
 
 let spinePlayer = null;
 let eyeBone = null;
@@ -74,6 +119,11 @@ document.addEventListener('mousemove', (e) => {
     targetX = (e.clientX - centerX) / sensitivity;
     targetY = (centerY - e.clientY) / sensitivity;
 });
+
+const modalOverlay = document.getElementById('modal-student');
+document.getElementById('btn-test').addEventListener('click', () => modalOverlay.classList.add('open'));
+document.getElementById('modal-close').addEventListener('click', () => modalOverlay.classList.remove('open'));
+modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('open'); });
 
 function tickEyes() {
     requestAnimationFrame(tickEyes);
