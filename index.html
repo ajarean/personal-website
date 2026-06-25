@@ -32,11 +32,19 @@
             <button class="ba-modal__close" id="modal-close" aria-label="Close">X</button>
         </div>
         <div class="ba-modal__body">
-            <p>Hi, I'm Andy, a software developer.</p>
-            <p>I just graduated with an MS in Computer Science, and I'm currently job hunting.</p>
-            <p>This site is a personal playground, since I wanted to experiment with Spine animations.</p>
-            <p>&nbsp;</p>
-            <p>Current interests: Computer Graphics</p>
+            <div id="modal-welcome" hidden>
+                <p>Welcome to my personal site!</p>
+                <p>I'm Andy, a recent MS Computer Science graduate currently looking for work.</p>
+                <p>&nbsp;</p>
+                <p>Feel free to look around. Click my playerbar in the top left to learn more about me.</p>
+            </div>
+            <div id="modal-about">
+                <p>Hi, I'm Andy, a software developer.</p>
+                <p>I just graduated with an MS in Computer Science, and I'm currently job hunting.</p>
+                <p>This site is a personal playground, since I wanted to experiment with Spine animations.</p>
+                <p>&nbsp;</p>
+                <p>Current interests: Computer Graphics</p>
+            </div>
         </div>
     </div>
 </div>
@@ -130,9 +138,26 @@ document.addEventListener('mousemove', (e) => {
 });
 
 const modalOverlay = document.getElementById('modal-student');
-document.getElementById('btn-about').addEventListener('click', () => modalOverlay.classList.add('open'));
+const modalWelcome = document.getElementById('modal-welcome');
+const modalAbout = document.getElementById('modal-about');
+
+const modalTitle = document.querySelector('.ba-modal__title');
+
+function openModal(content) {
+    modalWelcome.hidden = content !== 'welcome';
+    modalAbout.hidden = content !== 'about';
+    modalTitle.textContent = content === 'welcome' ? 'Welcome!' : 'About Me';
+    modalOverlay.classList.add('open');
+}
+
+document.getElementById('btn-about').addEventListener('click', () => openModal('about'));
 document.getElementById('modal-close').addEventListener('click', () => modalOverlay.classList.remove('open'));
 modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('open'); });
+
+if (!localStorage.getItem('visited')) {
+    localStorage.setItem('visited', '1');
+    openModal('welcome');
+}
 
 function tickEyes() {
     requestAnimationFrame(tickEyes);
