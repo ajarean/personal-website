@@ -16,10 +16,18 @@
 <body>
 
 <div id="player-container"></div>
+<!-- ANIMATION SELECT DROPDOWN -->
+<!-- <select id="anim-select" style="position:fixed;top:10px;right:10px;z-index:100;font-size:14px;padding:4px;"></select> -->
 
-<button class="ba-button ba-button--linkedin" id="btn-about" aria-label="About me">
+<dialog id="skip-dialog" style="padding:24px;text-align:center;border:1px solid #ccc;border-radius:6px;top:50%;left:50%;transform:translate(-50%,-50%);margin:0;">
+    <p style="margin-bottom:16px;">Skip the intro?<br>(I know this dialog box doesnt look pretty but I'll change it later)</p>
+    <button id="skip-yes" style="margin-right:8px;">Yes</button>
+    <button id="skip-no">No</button>
+</dialog>
+
+<button class="ba-button ba-button--linkedin ui-hidden" id="btn-about" aria-label="About me">
 </button>
-<a href="https://github.com/ajarean" class="ba-button ba-button--github" aria-label="GitHub projects">
+<a href="https://github.com/ajarean" class="ba-button ba-button--github ui-hidden" aria-label="GitHub projects">
     <img src="assets/projects_folder.svg" width="300">
 </a>
 
@@ -85,6 +93,7 @@ let eyeBone = null;
 let currentX = 0, currentY = 0;
 let targetX = 0, targetY = 0;
 const SMOOTH_FACTOR = 0.1;
+let eyeTrackingEnabled = false;
 
 const CAMERA = { x: 80, y: 830 };
 const ZOOM_HEIGHT = 1250;
@@ -111,20 +120,57 @@ new spine.SpinePlayer("player-container", {
     },
 
     success: function(player) {
-        // On startup, it should play Start_Idle_01, but this would be really weird to get working on a website since it moves the camera around (I think)
-        // Default state is Idle_01, but we want eye tracking 
-        // Eye movements DO work on Idle_01, but I think the Look animations have more head movement?
-        
-        // player.animationState.setAnimation(0, "Look_01_A", true)
-
-        // When the character looks, they play Look_01_A (Look_01_M) and end with LookEnd_01_A (LookEnd_01_M)
-        // No idea what the difference between A and M is (for now)
-
-
-        player.animationState.setAnimation(0, "Idle_01", true) 
-
         eyeBone = player.skeleton.findBone("Touch_Eye");
         requestAnimationFrame(tickEyes);
+
+        const skipDialog = document.getElementById('skip-dialog');
+        let introPlaying = true;
+
+        function finishIntro() {
+            if (!introPlaying) return;
+            introPlaying = false;
+            player.animationState.setAnimation(0, 'Idle_01', true);
+            eyeTrackingEnabled = true;
+            document.querySelectorAll('.ui-hidden').forEach(el => el.classList.remove('ui-hidden'));
+            if (showWelcome) openModal('welcome');
+        }
+
+        document.addEventListener('click', function onIntroClick() {
+            if (!introPlaying) { document.removeEventListener('click', onIntroClick); return; }
+            if (!skipDialog.open) skipDialog.showModal();
+        });
+
+        document.getElementById('skip-yes').addEventListener('click', (e) => {
+            e.stopPropagation();
+            skipDialog.close();
+            finishIntro();
+        });
+        document.getElementById('skip-no').addEventListener('click', (e) => {
+            e.stopPropagation();
+            skipDialog.close();
+        });
+
+        player.animationState.addListener({
+            complete: function(entry) {
+                if (entry.animation.name === 'Start_Idle_01') finishIntro();
+            }
+        });
+
+        player.animationState.setAnimation(0, 'Start_Idle_01', false);
+
+        
+        // ANIMATION SELECT
+        // const select = document.getElementById('anim-select');
+        // player.skeleton.data.animations.forEach(anim => {
+        //     const opt = document.createElement('option');
+        //     opt.value = opt.textContent = anim.name;
+        //     if (anim.name === 'Idle_01') opt.selected = true;
+        //     select.appendChild(opt);
+        // });
+        // select.addEventListener('change', () => {
+        //     eyeTrackingEnabled = true;
+        //     player.animationState.setAnimation(0, select.value, true);
+        // });
     }
 });
 
@@ -154,14 +200,12 @@ document.getElementById('btn-about').addEventListener('click', () => openModal('
 document.getElementById('modal-close').addEventListener('click', () => modalOverlay.classList.remove('open'));
 modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('open'); });
 
-if (!localStorage.getItem('visited')) {
-    localStorage.setItem('visited', '1');
-    openModal('welcome');
-}
+const showWelcome = !localStorage.getItem('visited');
+if (showWelcome) localStorage.setItem('visited', '1');
 
 function tickEyes() {
     requestAnimationFrame(tickEyes);
-    if (!eyeBone) return;
+    if (!eyeBone || !eyeTrackingEnabled) return;
     currentX += (targetX - currentX) * SMOOTH_FACTOR;
     currentY += (targetY - currentY) * SMOOTH_FACTOR;
     eyeBone.x = currentY;
