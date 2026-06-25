@@ -5,3 +5,6 @@ I don't really know what else to write here. It just links to my LinkedIn and Gi
 
 
 https://ajare-website.vercel.app/
+
+
+This project is a non-commercial, open-source educational portfolio piece built solely for the purpose of demonstrating advanced web animation techniques, state synchronization, and UI engineering. All characters, graphics, and associated assets are trademarks and copyright of Nexon Games / Yostar, and no copyright infringement is intended.

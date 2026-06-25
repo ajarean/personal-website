@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Andy Jarean</title>
@@ -78,6 +78,12 @@ let currentX = 0, currentY = 0;
 let targetX = 0, targetY = 0;
 const SMOOTH_FACTOR = 0.1;
 
+const CAMERA = { x: 80, y: 830 };
+const ZOOM_HEIGHT = 1250;
+const aspect = window.innerWidth / window.innerHeight;
+const vpHeight = ZOOM_HEIGHT;
+const vpWidth = ZOOM_HEIGHT * aspect;
+
 new spine.SpinePlayer("player-container", {
 	skeleton: "assets/CH0284_home.skel", // you might need to get these files yourself
 	atlas: "assets/CH0284_home.atlas",
@@ -89,11 +95,11 @@ new spine.SpinePlayer("player-container", {
     interactive: false,
 
     viewport: {
-        x: -1200,
-        y: 0,
-        width: 2560,
-        height: 1661,
-        clip: true
+        x: CAMERA.x - vpWidth / 2,
+        y: CAMERA.y - vpHeight / 2,
+        width: vpWidth,
+        height: vpHeight,
+        clip: false
     },
 
     success: function(player) {
@@ -140,3 +146,4 @@ function tickEyes() {
 </script>
 </body>
 </html>
+
