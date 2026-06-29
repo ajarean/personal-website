@@ -53,8 +53,6 @@ const aspect = window.innerWidth / window.innerHeight;
 const vpHeight = ZOOM_HEIGHT;
 const vpWidth = ZOOM_HEIGHT * aspect;
 
-const showWelcome = !localStorage.getItem('visited');
-if (showWelcome) localStorage.setItem('visited', '1');
 
 const modalOverlay = document.getElementById('modal-student');
 const modalWelcome = document.getElementById('modal-welcome');
@@ -108,7 +106,7 @@ new spine.SpinePlayer("player-container", {
             player.animationState.setAnimation(0, 'Idle_01', true);
             eyeTrackingEnabled = true;
             document.querySelectorAll('.ui-hidden').forEach(el => el.classList.remove('ui-hidden'));
-            if (showWelcome) openModal('welcome');
+            openModal('welcome');
         }
 
         document.addEventListener('click', function onIntroClick() {
