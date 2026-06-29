@@ -148,6 +148,18 @@ document.addEventListener('mousemove', (e) => {
     targetY = (centerY - e.clientY) / sensitivity;
 });
 
+document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    const centerX = window.innerWidth * 0.50;
+    const centerY = window.innerHeight * 0.40;
+    const sensitivity = 2.0;
+    targetX = (touch.clientX - centerX) / sensitivity;
+    targetY = (centerY - touch.clientY) / sensitivity;
+}, { passive: true });
+
+// Reload on orientation change so the Spine viewport aspect ratio recalculates
+window.addEventListener('orientationchange', () => location.reload());
+
 function tickEyes() {
     requestAnimationFrame(tickEyes);
     if (!eyeBone || !eyeTrackingEnabled) return;
