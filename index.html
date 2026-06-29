@@ -1,131 +1,109 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Andy Jarean</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andy Jarean</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- I don't think there's a spine 3.8??? would've been ideal for the model I wanted to use but oh well -->
-    <!-- <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css"> -->
-    <script src="spine/spine-player.js"></script>
-    <link rel="stylesheet" href="spine/spine-player.css">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-pro.css">
 </head>
 <body>
-
-<div id="player-container"></div>
-<!-- ANIMATION SELECT DROPDOWN -->
-<!-- <select id="anim-select" style="position:fixed;top:10px;right:10px;z-index:100;font-size:14px;padding:4px;"></select> -->
-
-<dialog id="skip-dialog" class="ba-notice">
-    <div class="ba-notice__header">
-        <div class="ba-notice__title-wrapper">
-            <h2 class="ba-notice__title">Notice</h2>
-            <div class="ba-notice__title-accent"></div>
-        </div>
-        <button id="skip-close" class="ba-notice__close" aria-label="Close">✕</button>
-    </div>
-
-    <div class="ba-notice__body">
-        <p class="ba-notice__text">Skip?</p>
-    </div>
-
-    <div class="ba-notice__actions">
-        <div class="ba-btn-wrapper">
-            <button id="skip-no" class="ba-notice-btn ba-notice-btn--cancel">Cancel</button>
-            <!-- <span class="ba-btn-badge">Esc</span> -->
-        </div>
-        <div class="ba-btn-wrapper">
-            <button id="skip-yes" class="ba-notice-btn ba-notice-btn--confirm">Confirm</button>
-            <!-- <span class="ba-btn-badge">Space</span> -->
-        </div>
-    </div>
-</dialog>
-
-<button class="ba-button ba-button--about ui-hidden" id="btn-about" aria-label="About me">
-</button>
-<button class="ba-button ba-button--projects ui-hidden" id="btn-projects" aria-label="Projects">
-    <img src="assets/projects_folder.svg" width="300">
-</button>
-
-
-<div class="ba-modal-overlay" id="modal-student">
-    <div class="ba-modal">
-        <div class="ba-modal__header">
-            <img src="assets/cafe.png" class="ba-modal__icon" alt="">
-            <h2 class="ba-modal__title">About Me</h2>
-            <button class="ba-modal__close" id="modal-close" aria-label="Close">X</button>
-        </div>
-        <div class="ba-modal__body">
-            <div id="modal-welcome" hidden>
-                <p>Welcome to my personal site!</p>
-                <p>I'm Andy, a recent MS Computer Science graduate currently looking for work.</p>
-                <p>&nbsp;</p>
-                <p>Feel free to look around. Click my playerbar in the top left to learn more about me.</p>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div>
+                <h1 class="site-name">Andy Jarean</h1>
+                <p class="site-subtitle">Software Engineer &middot; Computer Graphics</p>
             </div>
-            <div id="modal-about">
-                <p>Hi, I'm Andy, a software developer.</p>
-                <p>I just graduated with an MS in Computer Science, and I'm currently job hunting.</p>
-                <p>This site is a personal playground, since I wanted to experiment with Spine animations.</p>
-                <p>&nbsp;</p>
-                <p>Current interests: Computer Graphics</p>
-            </div>
-        </div>
-        <div class="ba-modal__footer">
-            <a href="https://www.linkedin.com/in/andy-jarean-155864234/" class="ba-modal__link" target="_blank" rel="noopener">
-                <img src="assets/linkedin.svg" class="ba-modal__link-icon" alt="">
-                LinkedIn
-            </a>
-            <a href="https://github.com/ajarean" class="ba-modal__link" target="_blank" rel="noopener">
-                <img src="assets/github.svg" class="ba-modal__link-icon" alt="">
-                GitHub
-            </a>
-        </div>
-    </div>
-</div>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
+        </header>
 
-<div class="ba-modal-overlay" id="modal-projects">
-    <div class="ba-modal ba-modal--wide">
-        <div class="ba-modal__header">
-            <img src="assets/students.png" class="ba-modal__icon" alt="">
-            <h2 class="ba-modal__title">Projects</h2>
-            <button class="ba-modal__close" id="modal-projects-close" aria-label="Close">X</button>
-        </div>
-        <div class="ba-modal__body ba-modal__body--grid">
-            <div class="ba-projects-grid">
+        <nav class="tab-nav" role="tablist" aria-label="Site sections">
+            <button class="tab-btn active" data-tab="about" role="tab" aria-selected="true" aria-controls="tab-about">About</button>
+            <button class="tab-btn" data-tab="projects" role="tab" aria-selected="false" aria-controls="tab-projects">Projects</button>
+            <button class="tab-btn" data-tab="contact" role="tab" aria-selected="false" aria-controls="tab-contact">Contact</button>
+        </nav>
 
-                <div class="ba-project-card">
-                    <div class="ba-project-card__media">
-                        <video src="projects/gaussfluid.mp4" controls muted playsinline></video>
-                    </div>
-                    <div class="ba-project-card__body">
-                        <h3 class="ba-project-card__title">Gaussian Fluids</h3>
-                        <p class="ba-project-card__desc">A (naive) re-implementation of the Gaussian Fluids paper by Xing et. al.</p>
-                        <a href="https://github.com/ajarean/gaussfluid" class="ba-project-card__link" target="_blank" rel="noopener">View Project →</a>
-                        <!-- https://github.com/ajarean/gaussfluid -->
-                    </div>
+        <main class="tab-content">
+            <section class="tab-panel active" id="tab-about" role="tabpanel">
+                <div class="about-body">
+                    <p>Hi, I'm Andy — a software engineer with an MS in Computer Science.</p>
+                    <p>My work centers on computer graphics: rendering, simulation, and the math that turns algorithms into images. I like working close to the hardware, where performance and precision actually matter.</p>
+                    <p>I'm currently looking for my next opportunity. In the meantime I keep building things, mostly to see how they work.</p>
                 </div>
+            </section>
 
-                <div class="ba-project-card">
-                    <div class="ba-project-card__media">
-                        <video src="projects/gloopsplat.mp4" controls muted playsinline></video>
-                    </div>
-                    <div class="ba-project-card__body">
-                        <h3 class="ba-project-card__title">Gloopsplat</h3>
-                        <p class="ba-project-card__desc">A PBF fluid sim featuring Gaussian-based rendering.</p>
-                        <a href="https://github.com/ajarean/gloopsplat" class="ba-project-card__link" target="_blank" rel="noopener">View Project →</a>
-                        <!-- https://github.com/ajarean/gloopsplat -->
-                    </div>
+            <section class="tab-panel" id="tab-projects" role="tabpanel">
+                <div class="projects-grid" id="projects-grid"></div>
+            </section>
+
+            <section class="tab-panel" id="tab-contact" role="tabpanel">
+                <div class="contact-body">
+                    <p class="contact-intro">Feel free to reach out — whether it's about work, a project, or just to say hi.</p>
+                    <ul class="contact-list">
+                        <li>
+                            <a href="mailto:ajarean@gmail.com" class="contact-link">
+                                <span class="contact-link__icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                    </svg>
+                                </span>
+                                ajarean@gmail.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/in/andy-jarean-155864234/" class="contact-link" target="_blank" rel="noopener">
+                                <span class="contact-link__icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                        <rect x="2" y="9" width="4" height="12"/>
+                                        <circle cx="4" cy="4" r="2"/>
+                                    </svg>
+                                </span>
+                                LinkedIn
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/ajarean" class="contact-link" target="_blank" rel="noopener">
+                                <span class="contact-link__icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                                    </svg>
+                                </span>
+                                GitHub
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+            </section>
+        </main>
 
-            </div>
-        </div>
+        <footer class="site-footer">
+            <a href="ba.html" class="secret-link" aria-label="Something else">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </a>
+        </footer>
     </div>
-</div>
 
-<script type="module" src="main.js"></script>
+    <script type="module" src="pro.js"></script>
 </body>
 </html>
-

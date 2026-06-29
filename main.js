@@ -1,3 +1,19 @@
+import { projects } from './projects.js';
+
+const baGrid = document.getElementById('ba-projects-grid');
+baGrid.innerHTML = projects.map(p => `
+    <div class="ba-project-card">
+        <div class="ba-project-card__media">
+            <video src="${p.video}" controls muted playsinline></video>
+        </div>
+        <div class="ba-project-card__body">
+            <h3 class="ba-project-card__title">${p.title}</h3>
+            <p class="ba-project-card__desc">${p.desc}</p>
+            <a href="${p.github}" class="ba-project-card__link" target="_blank" rel="noopener">View Project →</a>
+        </div>
+    </div>
+`).join('');
+
 const PLAYER = {
     name:       'Andy J.',
     level:      22,
