@@ -11,4 +11,11 @@ export const projects = [
         video:  'projects/gloopsplat.mp4',
         github: 'https://github.com/ajarean/gloopsplat',
     },
+    {
+        title: 'Spine Testing Ground',
+        desc: 'A personal playground for Spine animations. Also doubles as a second side of my personal website. Click the star icon in the bottom right to go there!',
+        video: 'projects/ba.png',
+        github: 'https://github.com/ajarean/personal-websit',
+
+    }
 ];

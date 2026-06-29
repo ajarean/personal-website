@@ -1,10 +1,14 @@
 import { projects } from './projects.js';
 
+const IMAGE_EXTS = /\.(png|jpe?g|gif|webp|avif|svg)$/i;
+
 const grid = document.getElementById('projects-grid');
 grid.innerHTML = projects.map(p => `
     <div class="project-card">
         <div class="project-card__media">
-            <video src="${p.video}" muted playsinline preload="metadata"></video>
+            ${IMAGE_EXTS.test(p.video)
+                ? `<img src="${p.video}" alt="${p.title}">`
+                : `<video src="${p.video}" muted playsinline preload="metadata"></video>`}
         </div>
         <div class="project-card__body">
             <h3 class="project-card__title">${p.title}</h3>

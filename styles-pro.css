@@ -169,6 +169,7 @@ body {
     overflow: hidden;
 }
 
+.project-card__media img,
 .project-card__media video {
     width: 100%;
     height: 100%;

@@ -1,10 +1,14 @@
 import { projects } from './projects.js';
 
+const IMAGE_EXTS = /\.(png|jpe?g|gif|webp|avif|svg)$/i;
+
 const baGrid = document.getElementById('ba-projects-grid');
 baGrid.innerHTML = projects.map(p => `
     <div class="ba-project-card">
         <div class="ba-project-card__media">
-            <video src="${p.video}" controls muted playsinline></video>
+            ${IMAGE_EXTS.test(p.video)
+                ? `<img src="${p.video}" alt="${p.title}">`
+                : `<video src="${p.video}" controls muted playsinline></video>`}
         </div>
         <div class="ba-project-card__body">
             <h3 class="ba-project-card__title">${p.title}</h3>
