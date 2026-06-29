@@ -109,6 +109,10 @@ new spine.SpinePlayer("player-container", {
             e.stopPropagation();
             skipDialog.close();
         });
+        document.getElementById('skip-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            skipDialog.close();
+        });
 
         player.animationState.addListener({
             complete: function(entry) {
