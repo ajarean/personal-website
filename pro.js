@@ -1,3 +1,19 @@
+import { projects } from './projects.js';
+
+const grid = document.getElementById('projects-grid');
+grid.innerHTML = projects.map(p => `
+    <div class="project-card">
+        <div class="project-card__media">
+            <video src="${p.video}" muted playsinline preload="metadata"></video>
+        </div>
+        <div class="project-card__body">
+            <h3 class="project-card__title">${p.title}</h3>
+            <p class="project-card__desc">${p.desc}</p>
+            <a href="${p.github}" class="project-card__link" target="_blank" rel="noopener">View on GitHub &rarr;</a>
+        </div>
+    </div>
+`).join('');
+
 const html = document.documentElement;
 const themeBtn = document.getElementById('theme-toggle');
 
