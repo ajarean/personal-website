@@ -18,7 +18,7 @@ baGrid.innerHTML = projects.map(p => `
     </div>
 `).join('');
 
-const PLAYER = {
+const PLAYER_DATA = {
     name:       'Andy J.',
     level:      22,
     xpCurrent:  0,
@@ -30,10 +30,10 @@ async function initPlayerbar() {
     const svgText = await res.text();
     const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
 
-    doc.getElementById('playername').querySelector('tspan').textContent = PLAYER.name;
-    doc.getElementById('lv-number').querySelector('tspan').textContent  = PLAYER.level;
+    doc.getElementById('playername').querySelector('tspan').textContent = PLAYER_DATA.name;
+    doc.getElementById('lv-number').querySelector('tspan').textContent  = PLAYER_DATA.level;
     doc.getElementById('xp-fraction').querySelector('tspan').textContent =
-        `${PLAYER.xpCurrent}/${PLAYER.xpMax}`;
+        `${PLAYER_DATA.xpCurrent}/${PLAYER_DATA.xpMax}`;
 
     const svg = doc.documentElement;
     svg.setAttribute('width', '400');
@@ -45,27 +45,31 @@ async function initPlayerbar() {
 }
 initPlayerbar();
 
+const CHARACTERS = [
+    { label: 'Yuuka', skeleton: 'assets/CH0284_home.skel', atlas: 'assets/CH0284_home.atlas', camera: { x: 80, y: 830 }, eyeBoneName: 'Touch_Eye', eyeScale: 1.0 },
+    { label: 'Kei',   skeleton: 'assets/CH0335_home.skel', atlas: 'assets/CH0335_home.atlas', camera: { x: 80, y: 830 }, eyeBoneName: 'Touch_Eye_Key',eyeScale: 0.6 },
+];
+let currentCharIdx = 0;
+let spinePlayer = null;
+
 let eyeBone = null;
+let eyeScale = 1.0;
 let currentX = 0, currentY = 0;
 let targetX = 0, targetY = 0;
 const SMOOTH_FACTOR = 0.1;
 let eyeTrackingEnabled = false;
+let eyeRAF = null;
 
-const CAMERA = { x: 80, y: 830 };
 const ZOOM_HEIGHT = 1250;
-const aspect = window.innerWidth / window.innerHeight;
-const vpHeight = ZOOM_HEIGHT;
-const vpWidth = ZOOM_HEIGHT * aspect;
 
-
-const modalOverlay = document.getElementById('modal-student');
-const modalWelcome = document.getElementById('modal-welcome');
-const modalAbout = document.getElementById('modal-about');
-const modalTitle = document.querySelector('.ba-modal__title');
+const modalOverlay   = document.getElementById('modal-student');
+const modalWelcome   = document.getElementById('modal-welcome');
+const modalAbout     = document.getElementById('modal-about');
+const modalTitle     = document.querySelector('.ba-modal__title');
 
 function openModal(content) {
     modalWelcome.hidden = content !== 'welcome';
-    modalAbout.hidden = content !== 'about';
+    modalAbout.hidden   = content !== 'about';
     modalTitle.textContent = content === 'welcome' ? 'Welcome!' : 'About Me';
     modalOverlay.classList.add('open');
 }
@@ -79,68 +83,108 @@ document.getElementById('btn-projects').addEventListener('click', () => projects
 document.getElementById('modal-projects-close').addEventListener('click', () => projectsOverlay.classList.remove('open'));
 projectsOverlay.addEventListener('click', (e) => { if (e.target === projectsOverlay) projectsOverlay.classList.remove('open'); });
 
-new spine.SpinePlayer("player-container", {
-    skeleton: "assets/CH0284_home.skel",
-    atlas: "assets/CH0284_home.atlas",
-    scale: 1,
-    premultipliedAlpha: false,
-    alpha: true,
-    backgroundColor: "#00000000",
-    showControls: false,
-    interactive: false,
-
-    viewport: {
-        x: CAMERA.x - vpWidth / 2,
-        y: CAMERA.y - vpHeight / 2,
-        width: vpWidth,
-        height: vpHeight,
-        clip: false
-    },
-
-    success: function(player) {
-        eyeBone = player.skeleton.findBone("Touch_Eye");
-        requestAnimationFrame(tickEyes);
-
-        const skipDialog = document.getElementById('skip-dialog');
-        let introPlaying = true;
-
-        function finishIntro() {
-            if (!introPlaying) return;
-            introPlaying = false;
-            player.animationState.setAnimation(0, 'Idle_01', true);
-            eyeTrackingEnabled = true;
-            document.querySelectorAll('.ui-hidden').forEach(el => el.classList.remove('ui-hidden'));
-            openModal('welcome');
-        }
-
-        document.addEventListener('click', function onIntroClick() {
-            if (!introPlaying) { document.removeEventListener('click', onIntroClick); return; }
-            if (!skipDialog.open) skipDialog.showModal();
-        });
-
-        document.getElementById('skip-yes').addEventListener('click', (e) => {
-            e.stopPropagation();
-            skipDialog.close();
-            finishIntro();
-        });
-        document.getElementById('skip-no').addEventListener('click', (e) => {
-            e.stopPropagation();
-            skipDialog.close();
-        });
-        document.getElementById('skip-close').addEventListener('click', (e) => {
-            e.stopPropagation();
-            skipDialog.close();
-        });
-
-        player.animationState.addListener({
-            complete: function(entry) {
-                if (entry.animation.name === 'Start_Idle_01') finishIntro();
-            }
-        });
-
-        player.animationState.setAnimation(0, 'Start_Idle_01', false);
-    }
+const switchBtn = document.getElementById('btn-switch-char');
+switchBtn.addEventListener('click', () => {
+    currentCharIdx = (currentCharIdx + 1) % CHARACTERS.length;
+    localStorage.setItem('baCharIdx', currentCharIdx);
+    loadCharacter(currentCharIdx, true);
 });
+
+function loadCharacter(idx, skipIntro) {
+    const char = CHARACTERS[idx];
+
+    if (eyeRAF !== null) { cancelAnimationFrame(eyeRAF); eyeRAF = null; }
+    eyeBone = null;
+    eyeScale = char.eyeScale ?? 1.0;
+    eyeTrackingEnabled = false;
+    currentX = 0; currentY = 0; targetX = 0; targetY = 0;
+
+    if (spinePlayer) { spinePlayer.dispose(); spinePlayer = null; }
+
+    const container = document.getElementById('player-container');
+
+    // Watch for the Spine error overlay so we can log the exact failure to console
+    const errorObserver = new MutationObserver(() => {
+        const errEl = container.querySelector('.spine-player-error');
+        if (errEl) {
+            console.error('[SpinePlayer error for ' + char.label + ']', errEl.innerText);
+            errorObserver.disconnect();
+        }
+    });
+    errorObserver.observe(container, { childList: true, subtree: true });
+
+    const aspect  = window.innerWidth / window.innerHeight;
+    const vpHeight = ZOOM_HEIGHT;
+    const vpWidth  = ZOOM_HEIGHT * aspect;
+
+    spinePlayer = new spine.SpinePlayer('player-container', {
+        skeleton: char.skeleton,
+        atlas:    char.atlas,
+        scale: 1,
+        premultipliedAlpha: false,
+        alpha: true,
+        backgroundColor: '#00000000',
+        showControls: false,
+        interactive: false,
+
+        viewport: {
+            x: char.camera.x - vpWidth  / 2,
+            y: char.camera.y - vpHeight / 2,
+            width:  vpWidth,
+            height: vpHeight,
+            clip: false,
+        },
+
+        success: function(player) {
+            eyeBone = char.eyeBoneName ? player.skeleton.findBone(char.eyeBoneName) : null;
+            eyeRAF  = requestAnimationFrame(tickEyes);
+
+            if (skipIntro) {
+                player.animationState.setAnimation(0, 'Idle_01', true);
+                eyeTrackingEnabled = true;
+                return;
+            }
+
+            const skipDialog = document.getElementById('skip-dialog');
+            let introPlaying = true;
+
+            function finishIntro() {
+                if (!introPlaying) return;
+                introPlaying = false;
+                player.animationState.setAnimation(0, 'Idle_01', true);
+                eyeTrackingEnabled = true;
+                document.querySelectorAll('.ui-hidden').forEach(el => el.classList.remove('ui-hidden'));
+                openModal('welcome');
+            }
+
+            document.addEventListener('click', function onIntroClick() {
+                if (!introPlaying) { document.removeEventListener('click', onIntroClick); return; }
+                if (!skipDialog.open) skipDialog.showModal();
+            });
+
+            document.getElementById('skip-yes').addEventListener('click', (e) => {
+                e.stopPropagation(); skipDialog.close(); finishIntro();
+            });
+            document.getElementById('skip-no').addEventListener('click', (e) => {
+                e.stopPropagation(); skipDialog.close();
+            });
+            document.getElementById('skip-close').addEventListener('click', (e) => {
+                e.stopPropagation(); skipDialog.close();
+            });
+
+            player.animationState.addListener({
+                complete: function(entry) {
+                    if (entry.animation.name === 'Start_Idle_01') finishIntro();
+                }
+            });
+
+            player.animationState.setAnimation(0, 'Start_Idle_01', false);
+        },
+    });
+}
+
+currentCharIdx = parseInt(localStorage.getItem('baCharIdx') ?? '0', 10) % CHARACTERS.length;
+loadCharacter(currentCharIdx, false);
 
 document.addEventListener('mousemove', (e) => {
     const centerX = window.innerWidth * 0.50;
@@ -159,14 +203,13 @@ document.addEventListener('touchmove', (e) => {
     targetY = (centerY - touch.clientY) / sensitivity;
 }, { passive: true });
 
-// Reload on orientation change so the Spine viewport aspect ratio recalculates
 window.addEventListener('orientationchange', () => location.reload());
 
 function tickEyes() {
-    requestAnimationFrame(tickEyes);
+    eyeRAF = requestAnimationFrame(tickEyes);
     if (!eyeBone || !eyeTrackingEnabled) return;
     currentX += (targetX - currentX) * SMOOTH_FACTOR;
     currentY += (targetY - currentY) * SMOOTH_FACTOR;
-    eyeBone.x = currentY;
-    eyeBone.y = -1 * currentX;
+    eyeBone.x = currentY * eyeScale;
+    eyeBone.y = -1 * currentX * eyeScale;
 }

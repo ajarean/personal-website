@@ -4,7 +4,7 @@ import { resolve } from 'path'
 export default defineConfig({
     server: {
         watch: {
-            ignored: ['**/assets/**']
+            ignored: ['**/*.{skel,atlas,png,jpg,mp4,webp,wav,ogg}']
         }
     },
     build: {

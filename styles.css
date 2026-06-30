@@ -415,6 +415,42 @@ button.ba-button {
     }
 }
 
+.ba-char-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2b4561;
+    background: linear-gradient(to bottom, #6fc8f2, #47a6e2);
+    border: 1.5px solid #3b8cb8;
+    border-radius: 4px;
+    padding: 8px 20px;
+    transform: skewX(-12deg);
+    transition: filter 0.15s, transform 0.1s, opacity 1.2s ease;
+    cursor: pointer;
+}
+
+.ba-char-btn span {
+    display: inline-block;
+    transform: skewX(12deg);
+}
+
+.ba-char-btn.ui-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ba-char-btn:hover {
+    filter: brightness(1.05);
+}
+
+.ba-char-btn:active {
+    transform: skewX(-12deg) scale(0.97);
+}
+
 .ba-button--about {
     top: 20px;
     left: 20px;
